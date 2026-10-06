@@ -174,7 +174,7 @@
       <h3 id="rank-title">近三年常見裁罰條文</h3>
       <p class="lead" id="rank-scope"></p>
       <p class="lead rank-legend" id="rank-legend" hidden></p>
-      <p class="lead">全臺與清冊場所分別選出各部法規近三年最常被引用的前10條；不足10條時全列。同一處分引用多條時，各條都會計入，因此條文件數不能相加當作處分總件數。切換年度只會改變顯示的件數。</p>
+      <p class="lead">全臺與清冊場所分別選出各部法規近三年最常被引用的前10條；不足10條時全列。同一處分只將符合範圍的條文分別計入，因此條文件數不能相加當作處分總件數。切換年度只會改變顯示的件數。</p>
       <div class="years" id="years"></div>
       <div class="bars" id="bars"></div>
       <div class="tbl-wrap"><table class="dyn" id="tbl"></table></div>
@@ -418,7 +418,7 @@
       document.getElementById('selected-law-title').textContent=(group.law||'')+'｜'+modeLabel;
       document.getElementById('mode-note').textContent='兩個範圍採用相同的火災爆炸相關判斷方式。全臺數字包含清冊場所，不能與清冊數字相加。';
       document.querySelector('#s-total + span').textContent='近三年火災爆炸相關處分';
-      document.getElementById('pen-lead').textContent='只看近三年與火災爆炸相關的裁罰；兩部法規分開計算。';
+      document.getElementById('pen-lead').textContent='依公告引用的法規與條號判斷，只計近三年引用火災爆炸預防及高壓氣體安全相關條文的處分；兩部法規分開計算。';
       const through=dateLabel(PEN_VIEWS[selectedMode].sourceThrough);
       document.querySelector('#s-y115 + span').textContent='115年（至'+through.split('/').slice(1).join('/')+'）';
       document.getElementById('pen-scope').textContent=selectedMode==='national'

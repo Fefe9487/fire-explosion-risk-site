@@ -14,6 +14,7 @@
 @media(max-width:960px){.overview .m-grid{grid-template-columns:1fr}.overview .steps{gap:16px}.overview .m-bar{grid-template-columns:minmax(150px,1fr) 1fr 65px}}
 @media(max-width:600px){.overview .wrap{margin:12px auto 24px;padding:0 10px}.overview .card{padding:18px 14px}.overview h1{font-size:22px}.overview .steps{grid-template-columns:1fr;gap:14px}.overview .m-metrics{grid-template-columns:1fr 1fr;gap:18px}.overview .metric:nth-child(2){border:0}.overview .metric strong{font-size:28px}.overview .m-filters label{width:100%}.overview .m-bar{grid-template-columns:1fr 65px;gap:4px 10px}.overview .m-bar-label{grid-column:1/-1}.overview .m-sources table,.overview .m-sources tbody,.overview .m-sources tr,.overview .m-sources td{display:block}.overview .m-sources thead{display:none}.overview .m-sources td{padding:6px 0;border:0}.overview .m-sources tr{padding:10px 0;border-bottom:1px solid var(--line)}.overview .m-sources td:first-child{font-weight:700;color:var(--navy)}}
 @media(max-width:600px){.overview .m-pen-comparison td[data-label]::before{content:attr(data-label) "：";color:var(--muted)}}
+.overview .m-rule-details{border:1px solid var(--line);border-radius:6px;margin:12px 0;padding:12px 16px;font-size:13px}.overview .m-rule-details summary{font-weight:600;color:var(--navy);cursor:pointer}.overview .m-rule-details summary:focus-visible{outline:2px solid var(--blue);outline-offset:4px}.overview .m-rule-details ul{padding-left:20px}.overview .m-rule-details li{margin:14px 0}.overview .m-rule-details a{overflow-wrap:anywhere}.overview .m-rule-details li p{margin:5px 0;line-height:2}
 </style>
 </head>
 <body class="overview"><div class="wrap"><main class="card">
@@ -49,11 +50,12 @@
 <table class="m-pen-comparison" aria-label="兩個統計範圍件數"><thead><tr><th>火災爆炸相關裁罰範圍</th><th>設施規則</th><th>高壓氣體勞工安全規則</th></tr></thead><tbody><tr><td>全臺事業單位（公告資料）</td><td id="m-pen-national-fac" data-label="設施規則">—</td><td id="m-pen-national-gas" data-label="高壓氣體勞工安全規則">—</td></tr><tr><td>清冊場所</td><td id="m-pen-roster-fac" data-label="設施規則">—</td><td id="m-pen-roster-gas" data-label="高壓氣體勞工安全規則">—</td></tr></tbody></table><p class="caption">全臺數字包含清冊場所，不能將兩列相加。上方的縣市、行業篩選只影響場所分布圖。</p>
 <ol>
 <li><strong>範圍：</strong>全臺統計使用公開裁罰資料；清冊統計只計能確認屬於清冊場所的處分。</li>
-<li><strong>相關案件：</strong>依公告的條文與說明，找出涉及火災、爆炸等風險的處分，並納入與液化石油氣容器串接有關的<a href="https://laws.mol.gov.tw/FLAW/FLAWDOC01.aspx?flno=191-1&amp;id=FL015042" target="_blank" rel="noopener">高壓氣體勞工安全規則第191條之1</a>。</li>
+<li><strong>相關案件：</strong>依裁罰公告引用的法規及條號，對照本網站列出的設施規則、高壓氣體勞工安全規則相關條文。只引用職安法一般義務的紀錄不計入；場所明細仍保留各類違規。</li>
 <li><strong>件數：</strong>同一處分在同一部法規只算一件；若同時引用兩部法規，則兩邊各算一件。</li>
 <li><strong>前10條：</strong>全臺與清冊場所各自選出每部法規最常引用的前10條；不足10條時全列。清冊前10中沒有進入全臺前10的條文標紅。這只表示排行不同。切換年度不會改變前10名單。</li>
 </ol>
-<p class="caption">同一處分若引用多條，每條都會計入排行，所以條文件數不能相加成處分總件數。這些數字是處分件數，並非事故場次；公告未明寫火災爆炸風險的案件可能未被找出。</p>
+<p class="caption">同一處分引用多條時，只將符合下列清單的條文計入排行。條文以整條計入，不拆款次；部分條文也涵蓋洩漏等危害，高壓氣體部分包含超壓與容器破裂防護。件數表示引用相關安全條文的處分，不代表已發生火災或爆炸。</p>
+<div id="m-fire-rules" aria-label="火災爆炸相關條文範圍"></div>
 </section>
 <section class="m-sources"><h2>資料來源與範圍</h2><table><thead><tr><th>資料</th><th>期間／來源</th><th>用途與限制</th></tr></thead><tbody>
 <tr><td>高風險場所清冊</td><td>115年度高風險場所清冊<br>提供版本：2026-08-06</td><td>以清冊場所為查詢與場所分布範圍，同一場所只算一次。清冊整理參考<a href="https://chemicloud.moenv.gov.tw/ChemiCloud/" target="_blank" rel="noopener">化學雲</a>及勞動檢查資料；本網站未重新評估各場所風險。</td></tr>
@@ -72,6 +74,14 @@ function mEsc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&l
 function mGrouped(rows,get){const map=new Map();for(const p of rows){const key=get(p)||'未提供';map.set(key,(map.get(key)||0)+1);}return [...map].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'zh-Hant'));}
 function mIndustryGroups(rows){const pairs=mGrouped(rows,p=>p.industry||'未取得行業資料'),shown=[];let other=0;for(const [name,n] of pairs){if(name!=='未取得行業資料'&&(n<=5||name==='其他'))other+=n;else shown.push([name,n]);}if(other)shown.push(['其他',other]);return shown;}
 function mRecentRecords(rows,dateKey,start,end){return rows.filter(x=>{const y=Number(String(x[dateKey]||'').split('/')[0]);return x.link==='plant'&&y>=start&&y<=end;});}
+function renderFireRules(criteria){
+const groups=criteria?.groups||[];
+if(!groups.length)return;
+document.getElementById('m-fire-rules').innerHTML=[['設規','職業安全衛生設施規則','N0060009'],['高壓則','高壓氣體勞工安全規則','N0060030']].map(([short,law,pcode])=>{
+const selected=groups.filter(g=>g.short===short),count=new Set(selected.flatMap(g=>g.articles)).size;
+return `<details class="m-rule-details"><summary>${mEsc(law)}：採用${count}條（展開查看）</summary><p><a href="${mEsc(criteria.sources[law])}" target="_blank" rel="noopener">查看法規全文</a></p><ul>${selected.map(g=>`<li><strong>${mEsc(g.topic)}</strong><p>${g.articles.map(ref=>{const [main,sub]=ref.split('-');if(short==='設規'&&ref==='186')return `<a href="https://laws.mol.gov.tw/FLAW/FLAWDOC04.aspx?id=FL015021&amp;ldate=20240801&amp;lno=186" target="_blank" rel="noopener">第186條（歷史條文）</a>`;return `<a href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=${pcode}&amp;flno=${mEsc(ref)}" target="_blank" rel="noopener">第${mEsc(main)}條${sub?'之'+mEsc(sub):''}</a>`;}).join('、')}</p></li>`).join('')}</ul>${short==='設規'?'<p class="caption">歷史處分保留原引用條文；第186條於115年7月1日刪除，歷史紀錄仍保留原引用條文。</p>':''}</details>`;
+}).join('');
+}
 function mBars(id,pairs){const max=Math.max(1,...pairs.map(x=>x[1]));document.getElementById(id).innerHTML=pairs.length?pairs.map(([name,n])=>`<div class="m-bar ${name.startsWith('未')?'m-unknown':''}"><span class="m-bar-label">${mEsc(name)}</span><span class="m-track" aria-hidden="true"><span class="m-fill" style="display:block;width:${100*n/max}%"></span></span><span class="m-number">${n}個</span></div>`).join(''):'<p class="m-empty">沒有符合篩選的場所。</p>';}
 function mRender(){
 const city=document.getElementById('m-city').value,industry=document.getElementById('m-industry').value;
@@ -84,6 +94,7 @@ mBars('m-records',mGrouped(rows,p=>{const pen=M_PEN_IDS.has(p.id),acc=M_ACC_IDS.
 }
 function initializeOverview(plants,meta,pen,acc,summary){
 M_PLANTS=plants;const [start,end]=meta.statisticsYears||[113,115];
+renderFireRules(summary?.fireCriteria);
 document.getElementById('m-roster-note').textContent=`本網站收錄${plants.length}個清冊場所；同一場所只算一次。場所查詢、職災統計與本頁分布圖以這些場所為範圍；全臺裁罰數字另使用全臺公告。`;
 for(const [id,law] of [['fac','設規'],['gas','高壓則']]){document.getElementById('m-pen-national-'+id).textContent=(summary?.nationalPenalty?.lawTotals?.[law]?.all??'—')+'件';document.getElementById('m-pen-roster-'+id).textContent=(summary?.lawTotals?.[law]?.all??'—')+'件';}
 M_PEN_IDS=new Set(mRecentRecords(pen,'date',start,end).map(x=>x.plantId));M_ACC_IDS=new Set(mRecentRecords(acc,'dispDate',start,end).map(x=>x.plantId));
