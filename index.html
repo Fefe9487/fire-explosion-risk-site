@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>具火災爆炸高風險事業單位職災與違規紀錄查詢系統</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #1e4b6b;
+      --head: #1b3a52;
+      --blue: #3b82f6;
+      --blue-hover: #2563eb;
+      --text: #1e293b;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --bg: #eef2f6;
+      --red: #e11d48;
+      --amber: #d97706;
+      --green: #16a34a;
+      --slate: #64748b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 1240px; margin: 28px auto 56px; padding: 0 16px; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px 24px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .rule { height: 3px; background: var(--blue); border: 0; margin: 0 0 22px; }
+    .fields {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr auto;
+      gap: 14px 16px;
+      align-items: end;
+    }
+    .extra {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.2fr;
+      gap: 14px 16px;
+      align-items: end;
+      margin-top: 12px;
+    }
+    .checks { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 12px; font-size: 13px; color: var(--navy); }
+    .checks label { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+    label.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--navy); }
+    input, select {
+      font: inherit;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+    }
+    input:focus, select:focus { outline: 2px solid rgba(59, 130, 246, 0.35); border-color: var(--blue); }
+    .kind-row { margin-top: 14px; }
+    .kind-row .lab { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chips button {
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: var(--navy);
+      border-radius: 999px;
+      padding: 6px 12px;
+      cursor: pointer;
+      line-height: 1.3;
+    }
+    .chips button:hover { border-color: var(--blue); color: var(--blue); }
+    .chips button[aria-pressed="true"] {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    .chips button[data-all][aria-pressed="true"] {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+    .go {
+      background: var(--blue);
+      color: #fff;
+      border: 0;
+      height: 40px;
+      padding: 0 22px;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .go:hover { background: var(--blue-hover); }
+    .board { margin-top: 22px; overflow-x: auto; }
+    .cols, .row-main {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.6fr) 86px minmax(180px, 1.3fr) minmax(170px, 1.2fr) 145px 165px;
+      gap: 8px 14px;
+      align-items: start;
+    }
+    .cols {
+      background: var(--head);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 6px 6px 0 0;
+    }
+    .row { border-bottom: 1px solid var(--line); cursor: pointer; }
+    .row:hover, .row[aria-expanded="true"] { background: #f8fafc; }
+    .row-main { padding: 14px; }
+    .name { font-weight: 600; color: var(--navy); line-height: 1.4; }
+    .sub { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+    .addr { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+    .tax { font-variant-numeric: tabular-nums; color: var(--muted); }
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: #fff;
+      line-height: 1.35;
+      text-align: center;
+    }
+    .pill.bad { background: var(--red); }
+    .pill.warn { background: var(--amber); }
+    .pill.ok { background: var(--green); }
+    .pill.mute { background: var(--slate); }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .tag.host { background: #fef3c7; color: #92400e; }
+    .dossier { display: none; padding: 0 14px 16px; }
+    .row[aria-expanded="true"] .dossier { display: block; }
+    .block-title { font-size: 14px; font-weight: 600; color: var(--navy); margin: 8px 0 6px; }
+    .block-note { font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+    .cases { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cases th { text-align: left; color: var(--muted); font-weight: 500; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); }
+    .cases td { padding: 8px 10px 8px 0; vertical-align: top; border-bottom: 1px solid var(--line); }
+    .code { font-variant-numeric: tabular-nums; }
+    footer { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+    footer a { color: var(--blue); }
+    .load-err { padding: 16px; color: var(--red); }
+    .count { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+    .pager {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .pager button {
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 36px;
+      height: 36px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--navy);
+      cursor: pointer;
+    }
+    .pager button:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+    .pager button[aria-current="page"] {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+    .pager button:disabled { color: #94a3b8; cursor: not-allowed; background: #f8fafc; }
+    .pager .gap { color: var(--muted); padding: 0 4px; font-size: 13px; }
+    @media (max-width: 900px) {
+      .fields, .extra { grid-template-columns: 1fr; }
+      .cols { display: none; }
+      .row-main { grid-template-columns: 1fr 1fr; }
+      .name { grid-column: 1 / -1; }
+    }
+    .highlight{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 0 18px;padding:16px 18px;border-left:4px solid var(--blue);background:#eff6fc;color:var(--navy);list-style:none}
+    .highlight li{min-width:0;padding:0 18px}.highlight li:first-child{padding-left:0}.highlight li:last-child{padding-right:0}.highlight li+li{border-left:1px solid #d4e3ef}
+    .highlight strong{display:block;margin-bottom:6px;font-size:15px;line-height:1.5}.highlight-no{margin-right:8px;font-size:12px;color:#366c95;font-variant-numeric:tabular-nums}.highlight p{margin:0;font-size:13px;color:#415d73;line-height:1.75}
+    @media(max-width:900px){.highlight{grid-template-columns:1fr;gap:12px}.highlight li{padding:0}.highlight li+li{border-left:0;border-top:1px solid #d4e3ef;padding-top:12px}}
+    .site-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0 0 18px;font-size:14px}
+    .site-nav a{color:var(--navy);text-decoration:none;padding:6px 0}
+    .site-nav a[aria-current]{font-weight:700;border-bottom:2px solid var(--blue)}
+    .case-scroll{overflow-x:auto;max-width:100%;margin:0 0 12px}.cases{min-width:740px}.cases td{overflow-wrap:anywhere}.source-note{padding:8px;background:#fff4dc;color:#804b00;font-size:12px}
+    .pen-cases{min-width:1000px;table-layout:fixed}.pen-cases .case-text{white-space:pre-wrap;line-height:1.8}.pen-cases caption{text-align:left;font-size:12px;color:var(--muted);padding:0 0 8px}.query-period{font-size:13px;color:var(--muted);margin:12px 0}
+    .case-preview,.case-full{display:block}.case-preview[hidden],.case-full[hidden]{display:none}.case-more{display:block;margin:8px 0;padding:0;border:0;background:transparent;color:#2464b0;font:inherit;text-decoration:underline;cursor:pointer}.case-more:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+    .pill{margin-bottom:4px}.card{min-width:0}
+    @media(max-width:600px){.wrap{margin:12px auto 24px;padding:0 10px}.card{padding:18px 14px}h1{font-size:21px}.row-main{padding:12px 6px;gap:10px}.row-main>div{min-width:0;overflow-wrap:anywhere}.dossier{padding:0 6px 12px}.highlight{padding:10px 12px}.site-nav{gap:6px 14px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>具火災爆炸高風險事業單位職災與違規紀錄查詢系統</h1>
+      <ul class="highlight" aria-label="平台亮點">
+        <li><strong><span class="highlight-no" aria-hidden="true">01</span>整合裁罰與職災紀錄</strong><p>串聯約10年裁罰紀錄，提供近五年職災紀錄查詢，依場所彙整歷史違規與職災相關處分。</p></li>
+        <li><strong><span class="highlight-no" aria-hidden="true">02</span>聚焦重大火災爆炸風險</strong><p>以化學雲及勞動檢查資料建立的高風險清冊為基礎，聚焦具重大火災爆炸風險的事業單位。</p></li>
+        <li><strong><span class="highlight-no" aria-hidden="true">03</span>掌握場所紀錄與產業分布</strong><p>提供清冊場所近五年紀錄查詢與近三年裁罰、職災統計，搭配行業及縣市分布，並清楚列示資料來源。</p></li>
+      </ul>
+      <nav class="site-nav" aria-label="主要頁面"><a href="index.html" aria-current="page">場所紀錄查詢</a><a href="gaps.html">近三年裁罰與職災</a><a href="method.html">篩選方式與資料概況</a></nav>
+      <hr class="rule" />
+      <form id="form">
+        <div class="fields">
+          <label class="field">事業單位名稱
+            <input id="q-name" type="search" placeholder="請輸入單位名稱關鍵字" autocomplete="off" />
+          </label>
+          <label class="field">統一編號
+            <input id="q-tax" type="search" placeholder="請輸入 8 位數統編" inputmode="numeric" maxlength="8" />
+          </label>
+          <label class="field">縣市
+            <select id="q-city"><option value="">全部縣市</option></select>
+          </label>
+          <button class="go" type="submit">立即查詢</button>
+        </div>
+        <div class="extra">
+          <label class="field">排序
+            <select id="q-sort">
+              <option value="name">名稱</option>
+              <option value="date">最近處分日</option>
+              <option value="acc">職災處分件數</option>
+              <option value="pen">裁罰件數</option>
+            </select>
+          </label>
+          <label class="field">是否有職災
+            <select id="q-acc">
+              <option value="">全部</option>
+              <option value="fire">火災</option>
+              <option value="boom">爆炸</option>
+              <option value="other">其他職災</option>
+              <option value="none">本資料未查得</option>
+            </select>
+          </label>
+          <label class="field">是否違規
+            <select id="q-viol">
+              <option value="">全部</option>
+              <option value="direct">曾有火災爆炸相關違規</option>
+              <option value="other">曾有違規</option>
+              <option value="none">本資料未查得</option>
+            </select>
+          </label>
+        </div>
+        <div class="extra">
+          <label class="field">處分年度
+            <select id="q-year"><option value="">近五年</option></select>
+          </label>
+          <label class="field">近三年常見裁罰條文
+            <select id="q-art"><option value="">全部條文</option></select>
+          </label>
+          <p class="block-note">條文選單依清冊場所近三年的火災爆炸相關裁罰排序，兩部法規各列前10條；不足10條時全列。選定條文後，可查近五年的場所紀錄。<a href="gaps.html#pen">裁罰統計頁</a>也可查看全臺事業單位的排行。</p>
+        </div>
+        <div class="kind-row">
+          <div class="lab">職災危害類型</div>
+          <div class="chips" id="q-kinds"></div>
+        </div>
+        <div class="checks">
+          <label><input id="q-host" type="checkbox" /> 含承攬／共同作業（場所推估）</label>
+        </div>
+      </form>
+      <p class="query-period" id="query-scope" aria-live="polite"></p>
+      <p class="query-period" id="q-period" aria-live="polite"></p>
+      <p class="count" id="count"></p>
+      <div class="board">
+        <div class="cols">
+          <span>事業單位名稱</span>
+          <span>統編</span>
+          <span>地區 / 地址</span>
+          <span>行業</span>
+          <span>職災相關處分</span>
+          <span>是否違規</span>
+        </div>
+        <div id="list"></div>
+      </div>
+      <nav id="pager" class="pager" aria-label="清單頁次"></nav>
+      <footer id="foot">※ 資料來源參考：勞動部職業安全衛生署。<a href="gaps.html">近三年裁罰與職災 →</a></footer>
+    </div>
+  </div>
+
+  <script>
+    const KINDS_17 = ["墜落、滾落","被夾、被捲","物體飛落","物體倒塌、崩塌","跌倒","被刺、割、擦傷","被撞","感電","與高溫、低溫之接觸","與有害物等之接觸","不當動作","衝撞","火災","爆炸","溺斃","踩踏(踏穿)","物體破裂"];
+    const PAGE_SIZE = 20;
+    let META = null, PLANTS = [], PEN = [], ACC = [];
+    let accByPlant = {}, penByPlant = {};
+    let openId = null;
+    let pageNo = 1;
+
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    }
+    function rocNum(date) {
+      const m = String(date || "").match(/^(\d{2,3})\/(\d{1,2})\/(\d{1,2})/);
+      if (!m) return 0;
+      return parseInt(m[1], 10) * 10000 + parseInt(m[2], 10) * 100 + parseInt(m[3], 10);
+    }
+    function recentFirst(list,dateKey) {
+      return [...list].sort((a,b)=>rocNum(b[dateKey])-rocNum(a[dateKey]));
+    }
+    function uniqueKinds(list) {
+      return new Set(list.map(a => a.no || a.id));
+    }
+    function countNos(list) {
+      return uniqueKinds(list).size;
+    }
+    function fireBoomOther(list) {
+      const count = pred => countNos(list.filter(pred));
+      return {fire:count(a=>a.kind==='火災'),boom:count(a=>a.kind==='爆炸'),other:count(a=>!['火災','爆炸'].includes(a.kind)),n:countNos(list)};
+    }
+    function flags() { return {host:document.getElementById("q-host").checked};
+    }
+    function inYearWindow(date, start, end, selected='') {
+      const match=String(date||'').match(/^(\d{2,3})\//),year=match?Number(match[1]):0;
+      return year>=start&&year<=end&&(!selected||year===Number(selected));
+    }
+    function queryDateHit(date) {
+      const [start,end]=META.queryYears||[111,115];
+      return inYearWindow(date,start,end,document.getElementById('q-year').value);
+    }
+    function accBundle(p, f) {
+      const all = (accByPlant[p.id] || []).filter(a=>queryDateHit(a.dispDate));
+      const plant = all.filter(a=>a.link==='plant');
+      const hosts = f.host ? all.filter(a=>a.link==='host-inferred') : [];
+      return {plant,hosts,shown:plant.concat(hosts)};
+    }
+    function penBundle(p, f) {
+      const plant = (penByPlant[p.id] || []).filter(x=>x.link==='plant'&&queryDateHit(x.date));
+      return {plant,shown:plant};
+    }
+    function accFilter() {
+      return document.getElementById("q-acc").value;
+    }
+    function violFilter() {
+      return document.getElementById("q-viol").value;
+    }
+
+
+    function accClass(p, f) {
+      const c=fireBoomOther(accBundle(p,f).shown);
+      return c.fire?'fire':c.boom?'boom':c.other?'other':'none';
+    }
+    function violClass(p, f) {
+      const plant = penBundle(p,f).plant;
+      return plant.some(x=>['direct','broad'].includes(x.tagFire))?'direct':plant.length?'other':'none';
+    }
+    function accPill(p, f) {
+      const c=fireBoomOther(accBundle(p,f).shown);
+      const parts=[];
+      if(c.fire)parts.push(`<span class="pill bad">火災 ${c.fire}件</span>`);
+      if(c.boom)parts.push(`<span class="pill bad">爆炸 ${c.boom}件</span>`);
+      if(c.other)parts.push(`<span class="pill mute">其他職災 ${c.other}件</span>`);
+      return parts.join(' ') || '<span class="pill mute">本資料未查得</span>';
+    }
+    function violPill(p, f) {
+      const k=violClass(p,f);
+      const records=penBundle(p,f).plant,n=countNos(records);
+      if(k==='direct')return `<span class="pill warn">曾有違規 ${n}件</span><span class="sub">火災爆炸相關 ${countNos(records.filter(x=>['direct','broad'].includes(x.tagFire)))}件</span>`;
+      if(k==='other')return `<span class="pill mute">曾有違規 ${n}件</span>`;
+      return '<span class="pill mute">本資料未查得</span>';
+    }
+    function wrapName(n) {
+      return esc(n).replace(/股份有限公司/g, "股份有限公司\u200b").replace(/(?<!股份)有限公司/g, "有限公司\u200b").replace(/研究院/g, "研究院\u200b").replace(/事業部/g, "事業部\u200b");
+    }
+    function tagCell(row) {
+      return row.link==='host-inferred'?`<span class="tag host">${esc(row.tag)}</span>`:'';
+    }
+    function articleText(row) {
+      const names={'設規':'職業安全衛生設施規則','高壓則':'高壓氣體勞工安全規則','職安法':'職業安全衛生法'};
+      const labels=(row.arts||[]).filter(a=>a.law&&Number.isInteger(Number(a.n))&&Number(a.n)>0).map(a=>
+        `${names[a.law]||a.law}第${Number(a.n)}條${a.sub==null?'':'之'+Number(a.sub)}`);
+      return labels.length?[...new Set(labels)].join('；'):(row.art||'');
+    }
+    function accTable(list) {
+      const body = recentFirst(list,'dispDate').map((c) => `<tr>
+        <td>${esc(c.dispDate)}</td>
+        <td class="code">${esc(c.no)}</td>
+        <td>${esc(c.kind)}</td>
+        <td>${esc(c.place || "")}</td>
+        <td>${esc(articleText(c))}</td>
+        <td>${esc(c.text)}${c.sourceWarning?`<p class="source-note">原始資料待核對：${esc(c.sourceWarning)}</p>`:""}</td>
+        <td>${tagCell(c)}</td>
+      </tr>`).join("");
+      return `<div class="case-scroll"><table class="cases"><thead><tr><th>處分日期</th><th>處分字號</th><th>災害類型</th><th>發生地</th><th>條文</th><th>說明</th><th>標籤</th></tr></thead><tbody>${body}</tbody></table></div>`;
+    }
+    function penaltyDescription(row) {
+      const text=String(row.text??''),characters=Array.from(text),long=characters.length>200;
+      return `<span class="case-preview">${esc(long?characters.slice(0,200).join('')+'…':text)}</span>`+
+        (long?`<button class="case-more" type="button" aria-expanded="false">查看更多</button><span class="case-full" hidden>${esc(text)}</span>`:'');
+    }
+    function penTable(list) {
+      const body = recentFirst(list,'date').map((c) => `<tr>
+        <td>${esc(c.date)}</td>
+        <td class="code">${esc(c.no)}</td>
+        <td>${esc(articleText(c))}</td>
+        <td class="case-text">${penaltyDescription(c)}</td>
+      </tr>`).join("");
+      return `<div class="case-scroll"><table class="cases pen-cases"><caption>裁罰說明預設顯示前200字，點「查看更多」展開全文；表格可左右捲動。</caption><colgroup><col style="width:100px"><col style="width:170px"><col style="width:220px"><col></colgroup><thead><tr><th>處分日期</th><th>處分字號</th><th>條文</th><th>裁罰說明</th></tr></thead><tbody>${body}</tbody></table></div>`;
+    }
+
+
+    function dossierHtml(p, f) {
+      const a=accBundle(p,f),pe=penBundle(p,f);
+      const actualIndustry=p.industry&&p.industry!=='未取得行業資料';
+      const label=actualIndustry?(p.industryLabels||[p.industry]).join('、'):(p.industryDescription||'未取得行業資料');
+      const source=actualIndustry?(p.industrySource||'未提供'):(p.industryDescription?'經濟部商工登記營業項目（統編查詢）':'未提供');
+      const bits=[`<p class="block-title">場所資料</p><p class="block-note">行業資料：${esc(label)}<br>資料來源：${esc(source)}</p>`];
+      if(p.addressSource)bits.push(`<p class="block-note">地址來源：${esc(p.addressSource)}</p>`);
+      if(a.plant.length)bits.push('<p class="block-title">職災相關處分（本場所）</p>'+accTable(a.plant));
+      if(a.hosts.length)bits.push('<p class="block-title">職災相關處分（承攬／共同作業）</p><p class="block-note">處分對象為承攬人或共同作業單位，發生地經比對後推估屬於本場所。</p>'+accTable(a.hosts));
+      if(pe.plant.length)bits.push('<p class="block-title">裁罰（本場所）</p>'+penTable(pe.plant));
+      if(!a.shown.length&&!pe.plant.length)bits.push('<p class="block-note">在所選處分年度與配對範圍內未查得紀錄。</p>');
+      if(a.plant.some(x=>x.note==='district'))bits.push('<p class="block-note">部分紀錄依行政區輔助配對，縣市或行政區相同不代表同一廠區。</p>');
+      return bits.join('');
+    }
+    function selectedKinds() {
+      return [...document.querySelectorAll("#q-kinds button[data-kind][aria-pressed='true']")].map((x) => x.dataset.kind);
+    }
+    function syncKindAll() {
+      const any = selectedKinds().length > 0;
+      const allBtn = document.querySelector("#q-kinds [data-all]");
+      if (allBtn) allBtn.setAttribute("aria-pressed", any ? "false" : "true");
+    }
+    function artNeed() { return document.getElementById('q-art').value;
+    }
+    function hasArt(list, key) {
+      const high=key.startsWith('hp-'),article=high?key.slice(3):key;
+      const names=high?['高壓則','高壓氣體勞工安全規則']:['設規','職業安全衛生設施規則'];
+      return list.some(x=>(x.arts||[]).some(a=>names.includes(a.law)&&(String(a.n)+(a.sub==null?'':'-'+a.sub))===article));
+    }
+    function latestDate(p, f) {
+      return Math.max(0,...accBundle(p,f).shown.map(a=>rocNum(a.dispDate)),...penBundle(p,f).plant.map(x=>rocNum(x.date)));
+    }
+    function nameHit(p, q) {
+      if (!q) return true;
+      const hay = (p.name || "") + (p.core || "");
+      if (hay.includes(q)) return true;
+      let tail = "";
+      const tails = ["加油加氣站", "供油中心", "儲運所", "煉油廠", "石化廠", "處理廠", "廠區"];
+      for (const t of tails) {
+        if (q.endsWith(t) && q.length > t.length) {
+          tail = q.slice(-(t.length + 2));
+          break;
+        }
+      }
+      if (!tail) {
+        const m2 = q.match(/([\u4e00-\u9fff]{2}廠)$/);
+        const m3 = q.match(/([\u4e00-\u9fff]{3}廠)$/);
+        if (m2 && (p.name || "").includes(m2[1])) tail = m2[1];
+        else if (m3 && (p.name || "").includes(m3[1])) tail = m3[1];
+      }
+      if (tail && (p.name || "").includes(tail)) {
+        const head = q.slice(0, q.length - tail.length);
+        if (!head || hay.includes(head)) return true;
+      }
+      return false;
+    }
+    function emptyResultHtml() {
+      const name = (document.getElementById("q-name").value || "").trim();
+      const tax = (document.getElementById("q-tax").value || "").trim();
+      const knownIdentity = PLANTS.some((p) =>
+        (name && nameHit(p, name)) || (tax && (p.tax || "").includes(tax)));
+      if ((name || tax) && !knownIdentity) {
+        return `<p role="status" style="padding:16px;color:var(--muted)">非屬具火災爆炸高風險事業單位<span class="sub">未在本網站目前收錄的高風險場所清冊中查得。</span></p>`;
+      }
+      return `<p role="status" style="padding:16px;color:var(--muted)">沒有符合的資料。</p>`;
+    }
+    function matchRow(p, f) {
+      const name = (document.getElementById("q-name").value || "").trim();
+      const tax = (document.getElementById("q-tax").value || "").trim();
+      const city = document.getElementById("q-city").value;
+      if (name && !nameHit(p, name)) return false;
+      if (tax && !(p.tax || "").includes(tax)) return false;
+      if (city && p.city !== city) return false;
+      const kinds = selectedKinds();
+      if (kinds.length) {
+        const pool = accBundle(p, f).shown;
+        if (!pool.some((a) => kinds.includes(a.kind))) return false;
+      }
+      const accSel = accFilter();
+      if (accSel) {
+        const c = fireBoomOther(accBundle(p, f).shown);
+        if (accSel === "none" ? c.n > 0 : !(accSel === "fire" ? c.fire : accSel === "boom" ? c.boom : c.other)) return false;
+      }
+      const violSel = violFilter();
+      if (violSel && violClass(p, f) !== violSel) return false;
+      const art = artNeed();
+      if (art) {
+        const pens = penBundle(p, f).shown;
+        if (!hasArt(pens, art)) return false;
+      }
+      return true;
+    }
+    function pageItems(cur, pages) {
+      if (pages <= 7) return Array.from({ length: pages }, (_, i) => i + 1);
+      const mark = new Set([1, pages, cur - 1, cur, cur + 1]);
+      const nums = [...mark].filter((n) => n >= 1 && n <= pages).sort((a, b) => a - b);
+      const out = [];
+      let prev = 0;
+      for (const n of nums) {
+        if (n - prev > 1) out.push("…");
+        out.push(n);
+        prev = n;
+      }
+      return out;
+    }
+    function pagerHtml(cur, pages, n) {
+      if (n <= PAGE_SIZE) return "";
+      const prevDis = cur <= 1 ? " disabled" : "";
+      const nextDis = cur >= pages ? " disabled" : "";
+      const nums = pageItems(cur, pages).map((x) => {
+        if (x === "…") return `<span class="gap">…</span>`;
+        const current = x === cur ? ` aria-current="page"` : "";
+        return `<button type="button" data-page="${x}"${current}>${x}</button>`;
+      }).join("");
+      return `<button type="button" data-page="${cur - 1}"${prevDis}>上一頁</button>${nums}<button type="button" data-page="${cur + 1}"${nextDis}>下一頁</button>`;
+    }
+    function catCell(p) {
+      const actual=p.industry&&p.industry!=='未取得行業資料';
+      const label=actual?p.industry:(p.industryDescription||'未取得行業資料');
+      return `${esc(label)}${p.industryLevel==='公司'?'<span class="sub">公司稅籍行業</span>':!actual&&p.industryDescription?'<span class="sub">公司登記營業項目摘要</span>':''}`;
+    }
+    function render(opts) {
+      if (!PLANTS.length) return;
+      if (opts && opts.resetPage) pageNo = 1;
+      const f = flags();
+      const sort = document.getElementById("q-sort").value;
+      let rows = PLANTS.filter((p) => matchRow(p, f));
+      rows.sort((a, b) => {
+        if (sort === "acc") return fireBoomOther(accBundle(b, f).plant.concat(accBundle(b, f).hosts)).n - fireBoomOther(accBundle(a, f).plant.concat(accBundle(a, f).hosts)).n || a.name.localeCompare(b.name, "zh-Hant");
+        if (sort === "pen") return countNos(penBundle(b,f).plant)-countNos(penBundle(a,f).plant)||a.name.localeCompare(b.name,"zh-Hant");
+        if (sort === "date") return latestDate(b, f) - latestDate(a, f) || a.name.localeCompare(b.name, "zh-Hant");
+        return a.name.localeCompare(b.name, "zh-Hant");
+      });
+      const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+      if (pageNo > pages) pageNo = pages;
+      if (pageNo < 1) pageNo = 1;
+      const start = (pageNo - 1) * PAGE_SIZE;
+      const slice = rows.slice(start, start + PAGE_SIZE);
+      const from = slice.length ? start + 1 : 0;
+      const to = start + slice.length;
+      document.getElementById("count").textContent = rows.length
+        ? `共 ${rows.length} 個場所（清冊 ${PLANTS.length} 個），本頁 ${from}–${to} · 第 ${pageNo} / ${pages} 頁`
+        : `共 0 個場所（清冊 ${PLANTS.length} 個）`;
+      const [queryStart,queryEnd]=META.queryYears||[111,115],selectedYear=document.getElementById('q-year').value;
+      document.getElementById('q-period').textContent=`查詢處分年度：${selectedYear?selectedYear+'年':'近五年（'+queryStart+'–'+queryEnd+'年）'}。資料涵蓋期間：${META.penaltyPeriod}；${META.accidentPeriod}。更新日：${META.sourceUpdatedAt||META.builtAt.split(' ')[0]}。未查得不代表沒有事故或違規。`;
+      document.getElementById("list").innerHTML = slice.map((p) => {
+        const open = openId === p.id;
+        return `<article class="row" aria-expanded="${open}" data-id="${esc(p.id)}">
+          <div class="row-main" role="button" tabindex="0">
+            <div class="name">${wrapName(p.name)}</div>
+            <div class="tax">${p.tax || "—"}</div>
+            <div>${esc(p.city)}<span class="addr">${esc(p.addr)}</span></div>
+            <div>${catCell(p)}</div>
+            <div>${accPill(p, f)}</div>
+            <div>${violPill(p, f)}</div>
+          </div>
+          <div class="dossier">${open ? dossierHtml(p, f) : ""}</div>
+        </article>`;
+      }).join("") || emptyResultHtml();
+      document.getElementById("pager").innerHTML = pagerHtml(pageNo, pages, rows.length);
+    }
+
+    document.getElementById("q-kinds").innerHTML =
+      `<button type="button" data-all="1" aria-pressed="true">全部</button>` +
+      KINDS_17.map((k) => `<button type="button" data-kind="${esc(k)}" aria-pressed="false">${esc(k)}</button>`).join("");
+
+    function queryChanged() { openId = null; render({ resetPage: true }); }
+    document.getElementById("form").addEventListener("submit", (e) => { e.preventDefault(); queryChanged(); });
+    ["q-sort", "q-art", "q-acc", "q-viol", "q-host", "q-year"].forEach((id) => {
+      document.getElementById(id).addEventListener("change", queryChanged);
+    });
+    document.getElementById("q-kinds").addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      if (btn.dataset.all) {
+        document.querySelectorAll("#q-kinds button[data-kind]").forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+      } else {
+        const on = btn.getAttribute("aria-pressed") === "true";
+        btn.setAttribute("aria-pressed", on ? "false" : "true");
+        syncKindAll();
+      }
+      queryChanged();
+    });
+    document.getElementById("pager").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-page]");
+      if (!btn || btn.disabled) return;
+      const n = parseInt(btn.dataset.page, 10);
+      if (!n) return;
+      pageNo = n;
+      openId = null;
+      render();
+      document.getElementById("count").scrollIntoView({ block: "nearest" });
+    });
+    document.getElementById("list").addEventListener("click", (e) => {
+      const more=e.target.closest('.case-more');
+      if(more){
+        const expanded=more.getAttribute('aria-expanded')!=='true',cell=more.closest('.case-text');
+        cell.querySelector('.case-preview').hidden=expanded;cell.querySelector('.case-full').hidden=!expanded;
+        more.setAttribute('aria-expanded',String(expanded));more.textContent=expanded?'收合內容':'查看更多';return;
+      }
+      if (e.target.closest(".dossier")) return;
+      const row = e.target.closest(".row");
+      if (!row) return;
+      openId = openId === row.dataset.id ? null : row.dataset.id;
+      render();
+    });
+    document.getElementById("list").addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (e.target.closest(".dossier")) return;
+      const row = e.target.closest(".row");
+      if (!row) return;
+      e.preventDefault();
+      openId = openId === row.dataset.id ? null : row.dataset.id;
+      render();
+    });
+
+
+    function indexRows() {
+      accByPlant={};penByPlant={};
+      for(const a of ACC)if(a.plantId&&['plant','host-inferred'].includes(a.link))(accByPlant[a.plantId]||=[]).push(a);
+      for(const x of PEN)if(x.plantId&&x.link==='plant')(penByPlant[x.plantId]||=[]).push(x);
+    }
+    function syncLawOptions(pen) {
+      const groups=pen.lawGroups||[{law:'職業安全衛生設施規則',short:'設規'}];
+      document.getElementById('q-art').innerHTML='<option value="">全部條文</option>'+groups.map(g=>
+        `<optgroup label="${esc(g.law)}">`+(pen.topArts||[]).filter(a=>(a.lawShort||'設規')===g.short).map(a=>
+          `<option value="${esc(a.key)}">${esc(a.label)}（${a.y.all}件）</option>`).join('')+'</optgroup>').join('');
+    }
+    function initializeQuery(meta,plants,penalties,accidents,ranking) {
+      META=meta;PLANTS=plants;PEN=penalties;ACC=accidents;indexRows();syncLawOptions(ranking);
+      document.getElementById('query-scope').textContent=`查詢範圍：115年度高風險清冊，共${PLANTS.length}個場所；同一場所只算一次。下方件數會隨篩選條件改變。裁罰與職災紀錄只顯示能確認屬於該場所的資料；承攬／共同作業紀錄可另外勾選查看。`;
+      const [start,end]=meta.queryYears||[111,115];
+      document.getElementById('q-year').innerHTML=`<option value="">近五年（${start}–${end}年）</option>`+Array.from({length:end-start+1},(_,i)=>end-i).map(y=>`<option value="${y}">${y}年</option>`).join('');
+      const cities=[...new Set(PLANTS.map(p=>p.city).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'));
+      document.getElementById('q-city').innerHTML='<option value="">全部縣市</option>'+cities.map(c=>`<option>${esc(c)}</option>`).join('');
+      document.getElementById('foot').innerHTML=`※ ${esc(meta.penaltyPeriod)}；本頁查詢近五年，統計採近三年。同一處分只算一件。<a href="gaps.html">近三年裁罰與職災</a>　<a href="method.html">篩選方式與資料概況</a>`;
+      render();
+    }
+
+    async function boot() {
+      try {
+        const values=await Promise.all(['meta','plants','penalties','accidents','gap-penalty'].map(name=>fetch('data/'+name+'.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(name);return r.json();})));
+        initializeQuery(...values);
+      }catch(err){document.getElementById('list').innerHTML='<p class="load-err">資料載入失敗，請經由本機網頁伺服器開啟，或使用 demo.html 離線展示檔。</p>';}
+    }
+    boot();
+  </script>
+</body>
+</html>

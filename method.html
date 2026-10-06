@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>篩選方式與資料概況｜火災爆炸高風險場所</title>
+<style>
+:root{--navy:#1e4b6b;--blue:#3b82f6;--text:#1e293b;--muted:#64748b;--line:#e2e8f0;--bg:#eef2f6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Microsoft JhengHei","Noto Sans TC",sans-serif;line-height:1.65}
+.overview .wrap{max-width:1240px;margin:28px auto 56px;padding:0 16px}.overview .card{background:#fff;border-radius:12px;padding:28px 32px;box-shadow:0 8px 24px #0f172a0f}
+.overview h1{color:var(--navy);font-size:26px;margin:0 0 12px}.overview h2{font-size:19px;color:var(--navy);margin:0 0 10px}.overview p{margin:0 0 12px}.overview a{color:#2464b0}.overview .site-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0 0 18px;font-size:14px}.overview .site-nav a{color:var(--navy);text-decoration:none;padding:6px 0}.overview .site-nav a[aria-current]{font-weight:700;border-bottom:2px solid var(--blue)}
+.overview .intro{max-width:900px;color:#475569;font-size:15px}.overview .m-rule{height:3px;background:var(--blue);border:0;margin:0 0 24px}.overview .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:0;list-style:none;margin:20px 0 28px}.overview .steps li{border-top:2px solid #a9c7de;padding-top:12px}.overview .step-no{color:#366c95;font-size:12px;font-weight:700;letter-spacing:.08em}.overview .steps h3{font-size:16px;margin:6px 0;color:var(--navy)}.overview .steps p{font-size:13px;color:#475569;margin:0}
+.overview .m-filters{display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.overview label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--navy)}.overview select{font:inherit;border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;max-width:100%;background:white;color:var(--text)}.overview button{font:inherit;color:var(--navy);border:1px solid #cbd5e1;background:white;border-radius:6px;padding:8px 16px;cursor:pointer}.overview select:focus-visible,.overview button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.overview .m-metrics{display:grid;grid-template-columns:repeat(3,1fr);margin:24px 0 28px;border-bottom:1px solid var(--line);padding-bottom:22px;gap:18px}.overview .metric{border-right:1px solid var(--line);padding-right:14px}.overview .metric:last-child{border:0}.overview .metric strong{display:block;font-size:32px;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.35}.overview .metric span{color:var(--muted);font-size:13px}.overview .m-section{margin:0 0 32px}.overview .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}.overview .caption{color:var(--muted);font-size:12px;line-height:1.7}.overview .axis{font-size:12px;color:var(--muted);text-align:right;margin:0 0 8px}.overview .m-bars{display:flex;flex-direction:column;gap:9px}.overview .m-bar{display:grid;grid-template-columns:minmax(160px,1.3fr) minmax(100px,1fr) 65px;gap:10px;align-items:center;font-size:13px}.overview .m-bar-label{color:var(--navy);overflow-wrap:anywhere}.overview .m-track{height:13px;background:#eaf0f5;border-radius:2px;overflow:hidden}.overview .m-fill{height:100%;background:#376f99}.overview .m-unknown .m-fill{background:#94a3b8}.overview .m-number{text-align:right;font-variant-numeric:tabular-nums;color:#475569}.overview .m-empty{padding:14px;background:#f8fafc;color:var(--muted);font-size:13px}.overview .m-note{padding:12px 15px;background:#f1f5f9;border-left:3px solid #94a3b8;font-size:13px;line-height:1.8;margin:16px 0}.overview .m-sources{border-top:1px solid var(--line);padding-top:24px}.overview .m-sources table{width:100%;border-collapse:collapse;font-size:13px}.overview th,.overview td{padding:12px 14px 12px 0;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.overview th{color:var(--muted);font-weight:500}.overview th:first-child{width:22%}.overview th:nth-child(2){width:29%}.overview footer{font-size:12px;color:var(--muted);margin-top:20px}
+@media(max-width:960px){.overview .m-grid{grid-template-columns:1fr}.overview .steps{gap:16px}.overview .m-bar{grid-template-columns:minmax(150px,1fr) 1fr 65px}}
+@media(max-width:600px){.overview .wrap{margin:12px auto 24px;padding:0 10px}.overview .card{padding:18px 14px}.overview h1{font-size:22px}.overview .steps{grid-template-columns:1fr;gap:14px}.overview .m-metrics{grid-template-columns:1fr 1fr;gap:18px}.overview .metric:nth-child(2){border:0}.overview .metric strong{font-size:28px}.overview .m-filters label{width:100%}.overview .m-bar{grid-template-columns:1fr 65px;gap:4px 10px}.overview .m-bar-label{grid-column:1/-1}.overview .m-sources table,.overview .m-sources tbody,.overview .m-sources tr,.overview .m-sources td{display:block}.overview .m-sources thead{display:none}.overview .m-sources td{padding:6px 0;border:0}.overview .m-sources tr{padding:10px 0;border-bottom:1px solid var(--line)}.overview .m-sources td:first-child{font-weight:700;color:var(--navy)}}
+@media(max-width:600px){.overview .m-pen-comparison td[data-label]::before{content:attr(data-label) "：";color:var(--muted)}}
+</style>
+</head>
+<body class="overview"><div class="wrap"><main class="card">
+<nav class="site-nav" aria-label="主要頁面"><a href="index.html">場所紀錄查詢</a><a href="gaps.html">近三年裁罰與職災</a><a href="method.html" aria-current="page">篩選方式與資料概況</a></nav>
+<h1>資料範圍與統計方式</h1>
+<p class="intro">串聯約10年裁罰紀錄，提供近五年職災紀錄查詢，以化學雲、勞動檢查資料建立的115年度高風險事業單位清冊為基礎，協助掌握具重大火災爆炸風險場所的歷史紀錄與分布。</p><hr class="m-rule">
+<ol class="steps">
+<li><span class="step-no">01　建立查詢範圍</span><h3>以高風險場所清冊為起點</h3><p>整理115年度清冊中的場所，同一場所只算一次。</p></li>
+<li><span class="step-no">02　連結歷史紀錄</span><h3>核對場所名稱與所在地</h3><p>將裁罰與職災資料連結到能確認的場所。承攬或共同作業紀錄可在查詢頁另外查看。</p></li>
+<li><span class="step-no">03　補充公開資料</span><h3>以統編補齊行業資料</h3><p>以統編查詢稅籍登記行業，並核對工廠名錄的廠名、地址及行業分類。無法取得分類時，補充原有公司登記營業項目，並標明資料來源。</p></li>
+</ol>
+<p class="caption">清冊以場所為單位，同一事業單位可能有多個廠區。登錄在清冊或查得歷史裁罰，均不代表近期必然發生事故。</p>
+<p class="m-note" id="m-roster-note" aria-live="polite">場所數載入中。</p>
+<section class="m-sources m-section" id="category-laws" aria-labelledby="category-title">
+<h2 id="category-title">相關場所類型與法規</h2>
+<p class="caption">以下介紹與本網站主題相關的場所及化學品管理制度，不代表個別場所符合所有條件。</p>
+<table><thead><tr><th>場所或物質類型</th><th>法源依據</th><th>適用範圍與管理重點</th></tr></thead><tbody>
+<tr><td>甲類工作場所<br>乙類工作場所<br>丙類工作場所（使用可燃氣體）</td><td><a href="https://laws.mol.gov.tw/FLAW/FLAWDOC01.aspx?flno=26&amp;id=FL015071" target="_blank" rel="noopener">勞動檢查法第26條</a><br><a href="https://laws.mol.gov.tw/FLAW/FLAWDOC01.aspx?flno=2&amp;id=FL015049" target="_blank" rel="noopener">危險性工作場所審查及檢查辦法第2條</a></td><td><p><strong>甲類：</strong>包括符合規定數量的石化原料、危險物或有害物工作場所。</p><p><strong>乙類：</strong>包括法規列明的特定農藥、爆竹煙火及爆炸性物品製造場所。</p><p><strong>丙類：</strong>包括符合規模的高壓氣體設備等場所；本網站關注其中使用可燃性氣體的情形。</p><p>這些工作場所依法須經審查或檢查合格，才可使勞工在該場所作業。實際適用條件請見法規原文。</p></td></tr>
+<tr><td>優先管理化學品達報備臨界量</td><td><a href="https://laws.mol.gov.tw/FLAW/FLAWDOC01.aspx?flno=14&amp;id=FL015013" target="_blank" rel="noopener">職業安全衛生法第14條</a><br><a href="https://laws.mol.gov.tw/FLAW/FLAWDOC01.aspx?flno=6&amp;id=FL075575" target="_blank" rel="noopener">優先管理化學品之指定及運作管理辦法第6條及附表三</a></td><td><p>指定化學品的運作量達法定臨界量時，須依規定報請備查；多種化學品也須依規定合併計算。實際門檻和例外請見法規原文。</p></td></tr>
+<tr><td>公共危險物品達管制量</td><td><a href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=D0120001&amp;flno=15" target="_blank" rel="noopener">消防法第15條</a><br><a href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=D0120025&amp;flno=3" target="_blank" rel="noopener">公共危險物品及可燃性高壓氣體製造儲存處理場所設置標準暨安全管理辦法第3條及附表一</a></td><td><p>公共危險物品達法定管制量時，儲存、處理等須符合消防安全規定。物品種類和管制量請見法規原文。</p></td></tr>
+</tbody></table><p class="caption">法源核對日期：2026-10-05。本網站介紹相關制度，不逐一判定場所是否達到法定門檻。</p>
+</section>
+<div class="m-filters"><label>場所所在縣市<select id="m-city"><option value="">全部縣市</option></select></label><label>登記行業<select id="m-industry"><option value="">全部行業</option></select></label><button id="m-reset" type="button">重設篩選</button><p class="caption" id="m-range" aria-live="polite"></p></div>
+<div class="m-metrics" aria-live="polite"><div class="metric"><strong id="m-total">—</strong><span>清冊場所（個）</span></div><div class="metric"><strong id="m-known-industry">—</strong><span>取得行業資料（個）</span></div><div class="metric"><strong id="m-counties">—</strong><span>涵蓋縣市（個）</span></div></div>
+<p class="caption">以下圖表涵蓋115年度高風險清冊場所。選擇縣市或行業後，數字與圖表會一起更新；同一場所只算一次。</p>
+<div class="m-grid">
+<section class="m-section"><h2>行業分布</h2><p class="caption">優先使用工廠登記行業，未取得時參考公司稅籍行業。每個場所只計一種；5個以下的行業合併為「其他」，查不到的另列。場所明細可查看資料來源。</p><div class="axis">場所數（個）</div><div id="m-industries" class="m-bars"></div></section>
+<section class="m-section"><h2>場所位置</h2><p class="caption">依場所地址所在縣市統計；無法確認縣市的場所另列。</p><div class="axis">場所數（個）</div><div id="m-locations" class="m-bars"></div></section>
+<section class="m-section" style="grid-column:1/-1"><h2>近三年紀錄涵蓋</h2><p class="caption" id="m-record-period">只計近三年能確認屬於清冊場所的紀錄。</p><p class="caption">這張圖呈現有裁罰或職災相關處分的場所數，包含各類違規與17種職災類型。未查得紀錄不代表沒有事故或違規。</p><div class="axis">場所數（個）</div><div id="m-records" class="m-bars"></div></section>
+</div>
+<section class="m-sources m-section" id="penalty-method"><h2>裁罰數字怎麼算</h2>
+<p id="m-pen-method-intro">可切換「全臺事業單位」或「清冊場所」。兩者都只看近三年與火災爆炸相關的裁罰；設施規則與高壓氣體勞工安全規則分開計算。</p>
+<table class="m-pen-comparison" aria-label="兩個統計範圍件數"><thead><tr><th>火災爆炸相關裁罰範圍</th><th>設施規則</th><th>高壓氣體勞工安全規則</th></tr></thead><tbody><tr><td>全臺事業單位（公告資料）</td><td id="m-pen-national-fac" data-label="設施規則">—</td><td id="m-pen-national-gas" data-label="高壓氣體勞工安全規則">—</td></tr><tr><td>清冊場所</td><td id="m-pen-roster-fac" data-label="設施規則">—</td><td id="m-pen-roster-gas" data-label="高壓氣體勞工安全規則">—</td></tr></tbody></table><p class="caption">全臺數字包含清冊場所，不能將兩列相加。上方的縣市、行業篩選只影響場所分布圖。</p>
+<ol>
+<li><strong>範圍：</strong>全臺統計使用公開裁罰資料；清冊統計只計能確認屬於清冊場所的處分。</li>
+<li><strong>相關案件：</strong>依公告的條文與說明，找出涉及火災、爆炸等風險的處分，並納入與液化石油氣容器串接有關的<a href="https://laws.mol.gov.tw/FLAW/FLAWDOC01.aspx?flno=191-1&amp;id=FL015042" target="_blank" rel="noopener">高壓氣體勞工安全規則第191條之1</a>。</li>
+<li><strong>件數：</strong>同一處分在同一部法規只算一件；若同時引用兩部法規，則兩邊各算一件。</li>
+<li><strong>前10條：</strong>全臺與清冊場所各自選出每部法規最常引用的前10條；不足10條時全列。清冊前10中沒有進入全臺前10的條文標紅。這只表示排行不同。切換年度不會改變前10名單。</li>
+</ol>
+<p class="caption">同一處分若引用多條，每條都會計入排行，所以條文件數不能相加成處分總件數。這些數字是處分件數，並非事故場次；公告未明寫火災爆炸風險的案件可能未被找出。</p>
+</section>
+<section class="m-sources"><h2>資料來源與範圍</h2><table><thead><tr><th>資料</th><th>期間／來源</th><th>用途與限制</th></tr></thead><tbody>
+<tr><td>高風險場所清冊</td><td>115年度高風險場所清冊<br>提供版本：2026-08-06</td><td>以清冊場所為查詢與場所分布範圍，同一場所只算一次。清冊整理參考<a href="https://chemicloud.moenv.gov.tw/ChemiCloud/" target="_blank" rel="noopener">化學雲</a>及勞動檢查資料；本網站未重新評估各場所風險。</td></tr>
+<tr><td>裁罰紀錄</td><td id="m-pen-period">載入中</td><td>資料來源：<a href="https://announcement.mol.gov.tw/cmpqry/c" target="_blank" rel="noopener">勞動部違反勞動法令事業單位查詢</a>。場所查詢可看近五年紀錄；裁罰統計只看近三年火災爆炸相關處分，並可切換全臺與清冊場所。</td></tr>
+<tr><td>職災相關處分</td><td id="m-acc-period">載入中</td><td>資料來源：<a href="https://toshms.osha.gov.tw/Disaster/Content/DisasterList" target="_blank" rel="noopener">職場重大災害檢查訊息</a>。統計只計能確認屬於清冊場所的紀錄，涵蓋17種災害類型；處分件數不等於事故場次。</td></tr>
+<tr><td>登記行業</td><td><a href="https://data.gov.tw/dataset/6569" target="_blank" rel="noopener">經濟部登記工廠名錄</a><br>本次取得：115年8月檔</td><td>依廠名與地址，或統編與地址交叉核對；多個候選工廠無法唯一確認時不填入。中文、阿拉伯數字門牌及里鄰等地址差異先正規化，再核對場所；未取得工廠分類時，以統編查詢稅籍資料補足。</td></tr>
+<tr><td>公司稅籍行業</td><td><a href="https://data.gov.tw/dataset/9400" target="_blank" rel="noopener">財政部全國營業（稅籍）登記資料集</a><br>取得日期：2026-10-03</td><td>依統一編號查詢行業代號及名稱。這是公司／營業人層級的行業資料，來源另行標示；不據此認定特定廠區的作業內容。僅涵蓋來源檔中的營業中資料。</td></tr>
+<tr><td>公司登記營業項目</td><td><a href="https://data.gcis.nat.gov.tw/od/" target="_blank" rel="noopener">經濟部商工行政資料開放平臺</a></td><td>保留前次統編查詢的登記營業項目摘要，供行業分類仍缺漏的場所查看。營業項目不是實際生產項目，也不直接納入行業分類統計。</td></tr>
+<tr><td>條文排名及摘要</td><td><span id="m-laws-period">近三年</span><br><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=N0060009" target="_blank" rel="noopener">全國法規資料庫</a>、<a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=N0060030" target="_blank" rel="noopener">高壓氣體勞工安全規則</a></td><td>全臺與清冊場所分別列出兩部法規最常引用的前10條；不足10條時全列。清冊前10中未進入全臺前10的條文標紅。場所查詢的條文選單使用清冊排行。</td></tr>
+</tbody></table></section>
+<footer>場所圖表會隨目前的縣市、行業篩選更新。資料會隨來源更新；查不到的行業資料會標示為未取得。</footer>
+</main></div>
+<script>
+let M_PLANTS=[],M_PEN_IDS=new Set(),M_ACC_IDS=new Set();
+function mEsc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function mGrouped(rows,get){const map=new Map();for(const p of rows){const key=get(p)||'未提供';map.set(key,(map.get(key)||0)+1);}return [...map].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'zh-Hant'));}
+function mIndustryGroups(rows){const pairs=mGrouped(rows,p=>p.industry||'未取得行業資料'),shown=[];let other=0;for(const [name,n] of pairs){if(name!=='未取得行業資料'&&(n<=5||name==='其他'))other+=n;else shown.push([name,n]);}if(other)shown.push(['其他',other]);return shown;}
+function mRecentRecords(rows,dateKey,start,end){return rows.filter(x=>{const y=Number(String(x[dateKey]||'').split('/')[0]);return x.link==='plant'&&y>=start&&y<=end;});}
+function mBars(id,pairs){const max=Math.max(1,...pairs.map(x=>x[1]));document.getElementById(id).innerHTML=pairs.length?pairs.map(([name,n])=>`<div class="m-bar ${name.startsWith('未')?'m-unknown':''}"><span class="m-bar-label">${mEsc(name)}</span><span class="m-track" aria-hidden="true"><span class="m-fill" style="display:block;width:${100*n/max}%"></span></span><span class="m-number">${n}個</span></div>`).join(''):'<p class="m-empty">沒有符合篩選的場所。</p>';}
+function mRender(){
+const city=document.getElementById('m-city').value,industry=document.getElementById('m-industry').value;
+const rows=M_PLANTS.filter(p=>(!city||p.city===city)&&(!industry||p.industry===industry));
+const knownIndustry=rows.filter(p=>p.industry&&p.industry!=='未取得行業資料').length;
+document.getElementById('m-total').textContent=rows.length.toLocaleString('zh-TW');document.getElementById('m-known-industry').textContent=knownIndustry;document.getElementById('m-counties').textContent=new Set(rows.map(p=>p.city).filter(x=>x&&x!=='未辨識縣市')).size;
+document.getElementById('m-range').textContent=`目前 ${rows.length}／${M_PLANTS.length} 個場所；下列圖表同步篩選。`;
+mBars('m-industries',mIndustryGroups(rows));mBars('m-locations',mGrouped(rows,p=>p.city||'未辨識縣市'));
+mBars('m-records',mGrouped(rows,p=>{const pen=M_PEN_IDS.has(p.id),acc=M_ACC_IDS.has(p.id);return pen&&acc?'同時有裁罰與職災處分':pen?'僅有裁罰紀錄':acc?'僅有職災處分':'本資料未查得紀錄';}));
+}
+function initializeOverview(plants,meta,pen,acc,summary){
+M_PLANTS=plants;const [start,end]=meta.statisticsYears||[113,115];
+document.getElementById('m-roster-note').textContent=`本網站收錄${plants.length}個清冊場所；同一場所只算一次。場所查詢、職災統計與本頁分布圖以這些場所為範圍；全臺裁罰數字另使用全臺公告。`;
+for(const [id,law] of [['fac','設規'],['gas','高壓則']]){document.getElementById('m-pen-national-'+id).textContent=(summary?.nationalPenalty?.lawTotals?.[law]?.all??'—')+'件';document.getElementById('m-pen-roster-'+id).textContent=(summary?.lawTotals?.[law]?.all??'—')+'件';}
+M_PEN_IDS=new Set(mRecentRecords(pen,'date',start,end).map(x=>x.plantId));M_ACC_IDS=new Set(mRecentRecords(acc,'dispDate',start,end).map(x=>x.plantId));
+for(const [id,get] of [['m-city',p=>p.city],['m-industry',p=>p.industry]]){const el=document.getElementById(id);for(const x of [...new Set(plants.map(get).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'))){const op=document.createElement('option');op.value=x;op.textContent=x;el.appendChild(op);}}
+document.getElementById('m-record-period').textContent=`民國${start}至${end}年能確認屬於清冊場所的紀錄；裁罰資料至${meta.penaltySourceThrough||'—'}，職災資料至${meta.accidentSourceThrough||'—'}。`;
+document.getElementById('m-pen-method-intro').textContent=`可切換「全臺事業單位」或「清冊場所」。兩者都只看民國${start}至${end}年與火災爆炸相關的裁罰，資料至${meta.penaltySourceThrough||'—'}；兩部法規分開計算。`;
+document.getElementById('m-laws-period').textContent=`民國${start}年1月至${meta.penaltySourceThrough||'—'}`;
+document.getElementById('m-pen-period').textContent=`統計：民國${start}–${end}年。${meta.penaltyPeriod}。更新日：${meta.sourceUpdatedAt||'—'}`;document.getElementById('m-acc-period').textContent=`統計：民國${start}–${end}年。${meta.accidentPeriod}。更新日：${meta.sourceUpdatedAt||'—'}`;mRender();}
+for(const id of ['m-city','m-industry'])document.getElementById(id).addEventListener('change',mRender);
+document.getElementById('m-reset').addEventListener('click',()=>{document.getElementById('m-city').value='';document.getElementById('m-industry').value='';mRender();});
+async function boot(){try{const data=await Promise.all(['plants','meta','penalties','accidents','gap-penalty'].map(n=>fetch('data/'+n+'.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(n);return r.json();})));initializeOverview(...data);}catch(e){document.getElementById('m-range').textContent='資料載入失敗，請經由網頁伺服器開啟或使用離線展示檔。';}}
+boot();
+</script></body></html>
