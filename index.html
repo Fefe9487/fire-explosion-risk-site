@@ -213,6 +213,8 @@
     .case-preview,.case-full{display:block}.case-preview[hidden],.case-full[hidden]{display:none}.case-more{display:block;margin:8px 0;padding:0;border:0;background:transparent;color:#2464b0;font:inherit;text-decoration:underline;cursor:pointer}.case-more:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
     .pill{margin-bottom:4px}.card{min-width:0}
     @media(max-width:600px){.wrap{margin:12px auto 24px;padding:0 10px}.card{padding:18px 14px}h1{font-size:21px}.row-main{padding:12px 6px;gap:10px}.row-main>div{min-width:0;overflow-wrap:anywhere}.dossier{padding:0 6px 12px}.highlight{padding:10px 12px}.site-nav{gap:6px 14px}}
+    .pen-cases .fire-law { color: #b42318; font-weight: 600; }
+    .pen-cases .fire-text { font-weight: 700; }
   </style>
 </head>
 <body>
@@ -306,6 +308,7 @@
     const KINDS_17 = ["墜落、滾落","被夾、被捲","物體飛落","物體倒塌、崩塌","跌倒","被刺、割、擦傷","被撞","感電","與高溫、低溫之接觸","與有害物等之接觸","不當動作","衝撞","火災","爆炸","溺斃","踩踏(踏穿)","物體破裂"];
     const PAGE_SIZE = 20;
     let META = null, PLANTS = [], PEN = [], ACC = [];
+    let FIRE_ARTICLE_KEYS = new Set();
     let accByPlant = {}, penByPlant = {};
     let openId = null;
     let pageNo = 1;
@@ -408,17 +411,42 @@
     }
     function penaltyDescription(row) {
       const text=String(row.text??''),characters=Array.from(text),long=characters.length>200;
-      return `<span class="case-preview">${esc(long?characters.slice(0,200).join('')+'…':text)}</span>`+
-        (long?`<button class="case-more" type="button" aria-expanded="false">查看更多</button><span class="case-full" hidden>${esc(text)}</span>`:'');
+      return `<span class="case-preview">${penaltyTextHtml(row,long?200:characters.length)}${long?'…':''}</span>`+
+        (long?`<button class="case-more" type="button" aria-expanded="false">查看更多</button><span class="case-full" hidden>${penaltyTextHtml(row,characters.length)}</span>`:'');
+    }
+    function fireArticleKey(article) {
+      const short={'職業安全衛生設施規則':'設規','高壓氣體勞工安全規則':'高壓則'}[article.law]||article.law;
+      return short+'|'+Number(article.n)+(article.sub==null?'':'-'+Number(article.sub));
+    }
+    function penaltyArticleHtml(row) {
+      const names={'設規':'職業安全衛生設施規則','高壓則':'高壓氣體勞工安全規則','職安法':'職業安全衛生法'};
+      const labels=new Map();
+      for(const a of row.arts||[])if(a.law&&Number.isInteger(Number(a.n))&&Number(a.n)>0){
+        const label=`${names[a.law]||a.law}第${Number(a.n)}條${a.sub==null?'':'之'+Number(a.sub)}`;
+        labels.set(label,FIRE_ARTICLE_KEYS.has(fireArticleKey(a)));
+      }
+      return labels.size?[...labels].map(([label,related])=>related?`<span class="fire-law">${esc(label)}</span>`:esc(label)).join('；'):esc(row.art||'');
+    }
+    function penaltyTextHtml(row,limit) {
+      const chars=Array.from(String(row.text??'')),end=Math.min(chars.length,limit);
+      const spans=(row.fireTextSpans||[]).filter(s=>Number.isInteger(s.start)&&Number.isInteger(s.end)&&s.start>=0&&s.end>s.start&&s.end<=chars.length).slice().sort((a,b)=>a.start-b.start);
+      let position=0,html='';
+      for(const span of spans){
+        const start=Math.max(position,span.start),stop=Math.min(end,span.end);
+        if(stop<=start||start>=end)continue;
+        html+=esc(chars.slice(position,start).join(''))+`<strong class="fire-text">${esc(chars.slice(start,stop).join(''))}</strong>`;
+        position=stop;
+      }
+      return html+esc(chars.slice(position,end).join(''));
     }
     function penTable(list) {
       const body = recentFirst(list,'date').map((c) => `<tr>
         <td>${esc(c.date)}</td>
         <td class="code">${esc(c.no)}</td>
-        <td>${esc(articleText(c))}</td>
+        <td>${penaltyArticleHtml(c)}</td>
         <td class="case-text">${penaltyDescription(c)}</td>
       </tr>`).join("");
-      return `<div class="case-scroll"><table class="cases pen-cases"><caption>裁罰說明預設顯示前200字，點「查看更多」展開全文；表格可左右捲動。</caption><colgroup><col style="width:100px"><col style="width:170px"><col style="width:220px"><col></colgroup><thead><tr><th>處分日期</th><th>處分字號</th><th>條文</th><th>裁罰說明</th></tr></thead><tbody>${body}</tbody></table></div>`;
+      return `<div class="case-scroll"><table class="cases pen-cases"><caption>紅字為火災爆炸相關條文；粗體為可對應相關條文的說明。預設顯示前200字，點「查看更多」展開全文；表格可左右捲動。</caption><colgroup><col style="width:100px"><col style="width:170px"><col style="width:220px"><col></colgroup><thead><tr><th>處分日期</th><th>處分字號</th><th>條文</th><th>裁罰說明</th></tr></thead><tbody>${body}</tbody></table></div>`;
     }
 
 
@@ -652,6 +680,7 @@
           `<option value="${esc(a.key)}">${esc(a.label)}（${a.y.all}件）</option>`).join('')+'</optgroup>').join('');
     }
     function initializeQuery(meta,plants,penalties,accidents,ranking) {
+      FIRE_ARTICLE_KEYS=new Set((ranking.fireCriteria?.groups||[]).flatMap(g=>g.articles.map(ref=>g.short+'|'+ref)));
       META=meta;PLANTS=plants;PEN=penalties;ACC=accidents;indexRows();syncLawOptions(ranking);
       document.getElementById('query-scope').textContent=`查詢範圍：115年度高風險清冊，共${PLANTS.length}個場所；同一場所只算一次。下方件數會隨篩選條件改變。裁罰與職災紀錄只顯示能確認屬於該場所的資料；承攬／共同作業紀錄可另外勾選查看。`;
       const [start,end]=meta.queryYears||[111,115];
