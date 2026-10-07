@@ -348,13 +348,11 @@
       const all = (accByPlant[p.id] || []).filter(a=>queryDateHit(a.dispDate));
       const plant = all.filter(a=>a.link==='plant');
       const hosts = f.host ? all.filter(a=>a.link==='host-inferred') : [];
-      const tax = p.tax && p.tax.length===8 ? (accByTax[p.tax] || []).filter(a=>queryDateHit(a.dispDate)) : [];
-      return {plant,hosts,tax,shown:plant.concat(hosts,tax)};
+      return {plant,hosts,tax:[],shown:plant.concat(hosts)};
     }
     function penBundle(p, f) {
       const plant = (penByPlant[p.id] || []).filter(x=>x.link==='plant'&&queryDateHit(x.date));
-      const tax = p.tax && p.tax.length===8 ? (penByTax[p.tax] || []).filter(x=>queryDateHit(x.date)) : [];
-      return {plant,tax,shown:plant.concat(tax)};
+      return {plant,tax:[],shown:plant};
     }
     function accFilter() {
       return document.getElementById("q-acc").value;
@@ -391,7 +389,7 @@
       return esc(n).replace(/股份有限公司/g, "股份有限公司\u200b").replace(/(?<!股份)有限公司/g, "有限公司\u200b").replace(/研究院/g, "研究院\u200b").replace(/事業部/g, "事業部\u200b");
     }
     function tagCell(row) {
-      if (row.link==='tax') return `<span class="tag">${esc(row.tag||'統編彙總')}</span>`;
+      if (row.link==='tax') return '';
       return row.link==='host-inferred'?`<span class="tag host">${esc(row.tag)}</span>`:'';
     }
     function articleText(row) {
@@ -451,7 +449,7 @@
         <td class="case-text">${penaltyDescription(c)}</td>
         <td>${tagCell(c)}</td>
       </tr>`).join("");
-      return `<div class="case-scroll"><table class="cases pen-cases"><caption>紅字為火災爆炸相關條文；粗體為可對應相關條文的說明。統編彙總不是單一場所的專屬處分。預設顯示前200字，點「查看更多」展開全文；表格可左右捲動。</caption><colgroup><col style="width:100px"><col style="width:170px"><col style="width:220px"><col><col style="width:96px"></colgroup><thead><tr><th>處分日期</th><th>處分字號</th><th>條文</th><th>裁罰說明</th><th>標籤</th></tr></thead><tbody>${body}</tbody></table></div>`;
+      return `<div class="case-scroll"><table class="cases pen-cases"><caption>紅字為火災爆炸相關條文；粗體為可對應相關條文的說明。預設顯示前200字，點「查看更多」展開全文；表格可左右捲動。</caption><colgroup><col style="width:100px"><col style="width:170px"><col style="width:220px"><col><col style="width:96px"></colgroup><thead><tr><th>處分日期</th><th>處分字號</th><th>條文</th><th>裁罰說明</th><th>標籤</th></tr></thead><tbody>${body}</tbody></table></div>`;
     }
 
 
@@ -464,9 +462,7 @@
       if(p.addressSource)bits.push(`<p class="block-note">地址來源：${esc(p.addressSource)}</p>`);
       if(a.plant.length)bits.push('<p class="block-title">職災相關處分（本場所）</p>'+accTable(a.plant));
       if(a.hosts.length)bits.push('<p class="block-title">職災相關處分（承攬／共同作業）</p><p class="block-note">處分對象為承攬人或共同作業單位，發生地經比對後推估屬於本場所。</p>'+accTable(a.hosts));
-      if(a.tax.length)bits.push('<p class="block-title">職災相關處分（統編彙總）</p><p class="block-note">同一統編有多個場所，這筆處分對不到其中一廠，所以沒有寫成單一場所的紀錄。</p>'+accTable(a.tax));
       if(pe.plant.length)bits.push('<p class="block-title">裁罰（本場所）</p>'+penTable(pe.plant));
-      if(pe.tax.length)bits.push('<p class="block-title">裁罰（統編彙總）</p><p class="block-note">同一統編有多個場所，這筆處分對不到其中一廠，所以沒有寫成單一場所的紀錄。</p>'+penTable(pe.tax));
       if(!a.shown.length&&!pe.shown.length)bits.push('<p class="block-note">在所選處分年度與配對範圍內未查得紀錄。</p>');
       if(a.plant.some(x=>x.note==='district'))bits.push('<p class="block-note">部分紀錄依行政區輔助配對，縣市或行政區相同不代表同一廠區。</p>');
       return bits.join('');
@@ -695,7 +691,7 @@
     function initializeQuery(meta,plants,penalties,accidents,ranking) {
       FIRE_ARTICLE_KEYS=new Set((ranking.fireCriteria?.groups||[]).flatMap(g=>g.articles.map(ref=>g.short+'|'+ref)));
       META=meta;PLANTS=plants;PEN=penalties;ACC=accidents;indexRows();syncLawOptions(ranking);
-      document.getElementById('query-scope').textContent=`查詢範圍：115年度高風險清冊，共${PLANTS.length}個場所；同一場所只算一次。下方件數會隨篩選條件改變。裁罰與職災紀錄顯示能確認屬於該場所的資料，以及同一統編對不到單一場所的統編彙總；承攬／共同作業紀錄可另外勾選查看。`;
+      document.getElementById('query-scope').textContent=`查詢範圍：115年度高風險清冊，共${PLANTS.length}個場所；同一場所只算一次。下方件數會隨篩選條件改變。裁罰與職災紀錄只顯示能確認屬於該場所的資料；承攬／共同作業紀錄可另外勾選查看。`;
       const [start,end]=meta.queryYears||[111,115];
       document.getElementById('q-year').innerHTML=`<option value="">近五年（${start}–${end}年）</option>`+Array.from({length:end-start+1},(_,i)=>end-i).map(y=>`<option value="${y}">${y}年</option>`).join('');
       const cities=[...new Set(PLANTS.map(p=>p.city).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'));
