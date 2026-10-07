@@ -1,8 +1,8 @@
 {
-  "fire_n": 46,
+  "fire_n": 47,
   "year_total": {
-    "all": 46,
-    "113": 20,
+    "all": 47,
+    "113": 21,
     "114": 19,
     "115": 7
   },
@@ -38,6 +38,21 @@
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=188"
     },
     {
+      "art": 184,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 4,
+        "113": 2,
+        "114": 2,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "184",
+      "label": "設規第184條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=184"
+    },
+    {
       "art": 60,
       "sub": null,
       "lawShort": "高壓則",
@@ -51,21 +66,6 @@
       "key": "hp-60",
       "label": "高壓則第60條",
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060030&flno=60"
-    },
-    {
-      "art": 184,
-      "sub": null,
-      "lawShort": "設規",
-      "y": {
-        "all": 3,
-        "113": 1,
-        "114": 2,
-        "115": 0
-      },
-      "law": "職業安全衛生設施規則",
-      "key": "184",
-      "label": "設規第184條",
-      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=184"
     },
     {
       "art": 198,
@@ -329,8 +329,8 @@
       "sub": null,
       "lawShort": "設規",
       "y": {
-        "all": 3,
-        "113": 1,
+        "all": 4,
+        "113": 2,
         "114": 2,
         "115": 0
       },
@@ -523,8 +523,8 @@
   "filterLimit": 10,
   "lawTotals": {
     "設規": {
-      "all": 39,
-      "113": 19,
+      "all": 40,
+      "113": 20,
       "114": 16,
       "115": 4
     },
