@@ -1,9 +1,9 @@
 {
-  "fire_n": 40,
+  "fire_n": 46,
   "year_total": {
-    "all": 40,
-    "113": 17,
-    "114": 16,
+    "all": 46,
+    "113": 20,
+    "114": 19,
     "115": 7
   },
   "arts": [
@@ -12,9 +12,9 @@
       "sub": null,
       "lawShort": "設規",
       "y": {
-        "all": 19,
-        "113": 12,
-        "114": 6,
+        "all": 22,
+        "113": 13,
+        "114": 8,
         "115": 1
       },
       "law": "職業安全衛生設施規則",
@@ -27,9 +27,9 @@
       "sub": null,
       "lawShort": "設規",
       "y": {
-        "all": 6,
+        "all": 7,
         "113": 1,
-        "114": 2,
+        "114": 3,
         "115": 3
       },
       "law": "職業安全衛生設施規則",
@@ -143,6 +143,21 @@
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=196"
     },
     {
+      "art": 285,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 2,
+        "113": 1,
+        "114": 1,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "285",
+      "label": "設規第285條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=285"
+    },
+    {
       "art": 54,
       "sub": null,
       "lawShort": "高壓則",
@@ -171,6 +186,21 @@
       "key": "hp-71",
       "label": "高壓則第71條",
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060030&flno=71"
+    },
+    {
+      "art": 106,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 1,
+        "113": 1,
+        "114": 0,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "106",
+      "label": "設規第106條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=106"
     },
     {
       "art": 107,
@@ -203,6 +233,21 @@
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=171"
     },
     {
+      "art": 175,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 1,
+        "113": 1,
+        "114": 0,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "175",
+      "label": "設規第175條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=175"
+    },
+    {
       "art": 191,
       "sub": 1,
       "lawShort": "高壓則",
@@ -218,6 +263,21 @@
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060030&flno=191-1"
     },
     {
+      "art": 195,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 1,
+        "113": 1,
+        "114": 0,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "195",
+      "label": "設規第195條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=195"
+    },
+    {
       "art": 209,
       "sub": null,
       "lawShort": "設規",
@@ -231,21 +291,6 @@
       "key": "209",
       "label": "設規第209條",
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=209"
-    },
-    {
-      "art": 285,
-      "sub": null,
-      "lawShort": "設規",
-      "y": {
-        "all": 1,
-        "113": 1,
-        "114": 0,
-        "115": 0
-      },
-      "law": "職業安全衛生設施規則",
-      "key": "285",
-      "label": "設規第285條",
-      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=285"
     }
   ],
   "topArts": [
@@ -254,9 +299,9 @@
       "sub": null,
       "lawShort": "設規",
       "y": {
-        "all": 19,
-        "113": 12,
-        "114": 6,
+        "all": 22,
+        "113": 13,
+        "114": 8,
         "115": 1
       },
       "law": "職業安全衛生設施規則",
@@ -269,9 +314,9 @@
       "sub": null,
       "lawShort": "設規",
       "y": {
-        "all": 6,
+        "all": 7,
         "113": 1,
-        "114": 2,
+        "114": 3,
         "115": 3
       },
       "law": "職業安全衛生設施規則",
@@ -355,6 +400,36 @@
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=196"
     },
     {
+      "art": 285,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 2,
+        "113": 1,
+        "114": 1,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "285",
+      "label": "設規第285條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=285"
+    },
+    {
+      "art": 106,
+      "sub": null,
+      "lawShort": "設規",
+      "y": {
+        "all": 1,
+        "113": 1,
+        "114": 0,
+        "115": 0
+      },
+      "law": "職業安全衛生設施規則",
+      "key": "106",
+      "label": "設規第106條",
+      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=106"
+    },
+    {
       "art": 107,
       "sub": null,
       "lawShort": "設規",
@@ -368,36 +443,6 @@
       "key": "107",
       "label": "設規第107條",
       "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=107"
-    },
-    {
-      "art": 171,
-      "sub": null,
-      "lawShort": "設規",
-      "y": {
-        "all": 1,
-        "113": 0,
-        "114": 0,
-        "115": 1
-      },
-      "law": "職業安全衛生設施規則",
-      "key": "171",
-      "label": "設規第171條",
-      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=171"
-    },
-    {
-      "art": 209,
-      "sub": null,
-      "lawShort": "設規",
-      "y": {
-        "all": 1,
-        "113": 0,
-        "114": 1,
-        "115": 0
-      },
-      "law": "職業安全衛生設施規則",
-      "key": "209",
-      "label": "設規第209條",
-      "href": "https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=N0060009&flno=209"
     },
     {
       "art": 60,
@@ -478,9 +523,9 @@
   "filterLimit": 10,
   "lawTotals": {
     "設規": {
-      "all": 33,
-      "113": 16,
-      "114": 13,
+      "all": 39,
+      "113": 19,
+      "114": 16,
       "115": 4
     },
     "高壓則": {
@@ -495,7 +540,7 @@
     {
       "law": "職業安全衛生設施規則",
       "short": "設規",
-      "articleCount": 11,
+      "articleCount": 14,
       "topKeys": [
         "177",
         "188",
@@ -504,9 +549,9 @@
         "108",
         "184-1",
         "196",
-        "107",
-        "171",
-        "209"
+        "285",
+        "106",
+        "107"
       ]
     },
     {
